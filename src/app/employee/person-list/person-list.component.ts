@@ -144,15 +144,7 @@ export class PersonListComponent implements OnInit {
     this.massage = null;
     this.dataSaved = false;
     this.employeeIdUpdate = this.selectedRows[0].Code;
-    this.employeeForm.controls['Title'].setValue(this.selectedRows[0].Title);
-    this.employeeForm.controls['FirstName'].setValue(this.selectedRows[0].FirstName);
-    this.employeeForm.controls['MiddleName'].setValue(this.selectedRows[0].MiddleName);
-    this.employeeForm.controls['LastName'].setValue(this.selectedRows[0].LastName);
-    this.employeeForm.controls['Gender'].setValue(this.selectedRows[0].Gender);
-    this.employeeForm.controls['Nationality'].setValue(this.selectedRows[0].Nationality);
-    this.employeeForm.controls['BirthDate'].setValue(new Date(this.selectedRows[0].BirthDate)); //this.selectedRows[0].BirthDate
-    this.employeeForm.controls['Active'].setValue(this.selectedRows[0].Active);
-    this.employeeForm.controls['Remark'].setValue(this.selectedRows[0].Remark);
+    
   }
   public onRowClicked($event: any) {
     console.log("yep");

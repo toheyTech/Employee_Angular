@@ -23,7 +23,6 @@ export class PersonalDetailComponent implements OnInit {
   selectedRows: any;
   public employees: Employee[];
 
-   
   public columnDefs: ColDef[];   // row data and column definitions
   // gridApi and columnApi  
   private gridApi: GridApi;  
@@ -47,20 +46,36 @@ export class PersonalDetailComponent implements OnInit {
       this.gridOptions = {
         columnDefs :this.createColumnDefs(),
         masterDetail: true,
+        detailCellRendererParams: {
+
+          // provide the Grid Options to use on the Detail Grid
+          detailGridOptions: {
+              columnDefs: [
+                  { field: 'callId' },
+                  { field: 'direction' },
+                  { field: 'number'}
+              ]
+          },
+  
+          // get the rows for each Detail Grid
+          getDetailRowData: function(params) {
+              params.successCallback(params.data.callRecords);
+          }
+      }
        // onRowDoubleClicked(): this.onRowDoubleClicked(any)
       
     }
   }  
 
   ngOnInit() {  
-     
+
     this.initializeEmployeeForm();
     this.getEmployeeList();
   } 
 
-  private initializeEmployeeForm(){
-    this.employeeForm = this.formBuilder.group({  
-      Title: ["", Validators.required],  
+  public initializeEmployeeForm(){
+    this.employeeForm = this.formBuilder.group({
+      "Title": ["", Validators.required],  
       "FirstName": ["", Validators.required],  
       "MiddleName": ["", Validators.required],  
       "LastName": ["", Validators.required],  
@@ -81,6 +96,7 @@ export class PersonalDetailComponent implements OnInit {
   // intialize employee Form
   private newProject() : FormGroup{
     return this.formBuilder.group({
+      "Code": 0,
       "Name": '',
       "Description" : '',
     })
@@ -88,7 +104,7 @@ export class PersonalDetailComponent implements OnInit {
 
   // add project Form
   public addProjects(){
-    this.projects.push(this.newProject())
+    this.projects.push(this.newProject());
   }
 
   // remove project Form
@@ -113,6 +129,7 @@ export class PersonalDetailComponent implements OnInit {
             filter: false,
             editable: false,
             sortable: false,
+            cellRenderer: 'agGroupCellRenderer'
           }, {
             headerName: 'Title',
             field: 'Title',
@@ -168,6 +185,17 @@ export class PersonalDetailComponent implements OnInit {
               field: 'Remark',
               filter: true,
               editable: false
+            }, {
+              headerName: 'P Description',
+              field: 'Description',
+              filter: true,
+              editable: false
+            },
+            {
+              headerName: 'P Description',
+              field: 'data.Projects.Description',
+              filter: true,
+              editable: false
             }]  
         }  
   status: any;
@@ -199,12 +227,19 @@ export class PersonalDetailComponent implements OnInit {
     this.employeeForm.reset();
   }
 
-  
+  // get Employee By Code
+  public getEmployeeByID(){
+    this.employeeService.getEmployeeDetailById(this.employeeId).subscribe(data =>{
+      console.log(data);
+    })
+  }
+
   // get Employee List
   public getEmployeeList(){
     this.employeeService.getEmployees().subscribe(data => { 
       console.log(data); 
-      this.employees = data  
+      this.employees = data 
+      
   }) 
   }
 
@@ -214,11 +249,12 @@ export class PersonalDetailComponent implements OnInit {
     if (this.employeeIdUpdate == null) {
       this.employeeService.addEmployee(employee).subscribe(
         () => {
+
           this.dataSaved = true;
           this.toastr.success("successfully created "); 
           this.getEmployeeList();
           this.employeeIdUpdate = null;
-          this.employeeForm.reset();
+          this.initializeEmployeeForm();
         }
       );
     } else {
@@ -250,6 +286,7 @@ export class PersonalDetailComponent implements OnInit {
     this.employeeForm.controls['Active'].setValue(this.selectedRows[0].Active);
     this.employeeForm.controls['Remark'].setValue(this.selectedRows[0].Remark);
   }
+
   public onRowClicked($event: any){
     console.log("yep");
   }
@@ -279,7 +316,7 @@ export class PersonalDetailComponent implements OnInit {
     const selectedRows = this.gridApi.getSelectedRows();
    // console.log();
     this.gridApi.deselectAll();
-    this.employeeForm.reset(); 
+    this.initializeEmployeeForm();
     this.employeeIdUpdate = null; 
     this.massage = null;  
     this.dataSaved = false;  

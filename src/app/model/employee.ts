@@ -1,3 +1,5 @@
+import { Identifiers } from '@angular/compiler';
+
 export class Employee {
     
     Code : number ;
@@ -10,4 +12,10 @@ export class Employee {
     Gender : string;
     Active :boolean;
     Remark : string;
+    Projects: [
+        id: number,
+        Name: string,
+        Description:string,
+        Code:number
+    ];
 }
