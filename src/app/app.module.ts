@@ -10,19 +10,21 @@ import { Routes, RouterModule } from '@angular/router';
 import { SidebarModule} from 'ng-sidebar';
 
 import { AppComponent } from './app.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from './shared/dashboard/dashboard.component';
 import { EmployeeModule } from './employee/employee.module';
 import { EmployeeService } from './services/employee.service';
 import { EmployeeRoutingModule } from './employee/employee-routing.module';
 import { BsDatepickerModule, DatepickerModule } from 'ngx-bootstrap/datepicker';
 import { ToastrModule } from 'ngx-toastr';
 import { EmployeeComponent } from './employee/employee.component';
+import { SidebarComponent } from './shared/sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashboardComponent,
-    EmployeeComponent
+    EmployeeComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

@@ -49,7 +49,7 @@ public addProject(project: Project): Observable < string > {
             'Content-Type': 'application/json'  
         })  
     };  
-    return this.http.post < string > (`${this.apiUrl}InsertProjectDetails/`, project, httpOptions);  
+    return this.http.post < string > (`${this.projectUrl}InsertProjectDetails/`, project, httpOptions);  
 }  
 
   // update employee

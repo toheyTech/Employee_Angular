@@ -1,46 +1,86 @@
-<div class="container"> 
-    <div class="row">  
-        <div class="col-md-12">   
-            <form [formGroup]="projectForm" id="ngProjectForm" (ngSubmit)="onFormSubmit()"> 
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div style="margin-top: -20px;" class="row">
+                <div class="col-md-4" style="text-align: left;">
+                    <button form="ngProjectForm" style="margin-right: 8px;" [disabled]="!projectForm.valid"
+                        type="submit" class="btn btn-sm btn-primary">Submit</button>
+                    <button style="margin-right: 8px; " class="btn btn-sm btn-warning" (click)="resetForm()">
+                        Clear</button>
+                    <button form="ngProjectForm" style="margin-right: 8px;" [disabled]="!projectForm.valid"
+                        class="btn btn-sm btn-primary" type="submit" (click)="onFormSubmit()">Edit </button>
+
+                    <button class="btn btn-sm btn-danger" (click)="deleteProject()">Delete </button>
+                </div>
+                <div class="col-md-8"></div>
+            </div>
+
+            <hr style="margin-top: 0px;">
+            <form [formGroup]="projectForm" id="ngProjectForm" (ngSubmit)="onFormSubmit()">
+
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-4">  
-                                <label for="name">Project Name:</label>  
-                            </div>  
-                            <div class="col-md-8">  
-                                    <input type="text" class="form-control form-control-xs" formControlName="Name">  
-                                        <div *ngIf="submitted && projectForm.controls.Name.errors" class="error">  
-                                            <div *ngIf="projectForm.controls.Name.errors.required">Name is required</div>  
-                                </div>  
+                            <div class="col-md-4">
+                                <label for="employee">Employee:</label>
                             </div>
-                        </div> 
-                    </div>
-                     <div class="col-md-6">
-                        <div class="row"> 
-                            <div class="col-md-4">  
-                                <label for="middleName">Description:</label>  
-                            </div>  
-                            <div class="col-md-8">  
-                                <input type="text" class="form-control form-control-xs" formControlName="Description">  
-                                    <div *ngIf="submitted && projectForm.controls.Description.errors" class="error">  
-                                        <div *ngIf="projectForm.controls.Description.errors.required">Description is required</div>  
-                                    </div>  
-                            </div>  
+                            <div class="col-md-8">
+                                <select class="form-control form-control-xs" id="employee" formControlName="Code"
+                                    required>
+                                    <option value="" selected disabled> Select Employee</option>
+                                    <option *ngFor="let employee of employees" [ngValue]="employee.Code"
+                                        (change)="changeEmployee($event)">
+                                        {{employee.FirstName}} {{employee.LastName}}
+                                    </option>
+                                </select>
+                                <div *ngIf="submitted && projectForm.controls.employee.errors" class="error">
+                                    <div *ngIf="projectForm.controls.employee.errors.required">Employee is required
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div> 
-            
-                </div>  
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="name">Project Name:</label>
+                            </div>
+                            <div  class="col-md-8 formGroup" [ngClass]="{ 'has-error': projectForm.get('Name').errors && 
+                            (projectForm.get('Name').touched || projectForm.get('Name').dirty) }">
+                                <input id="Name" type="text" class="form-control form-control-xs" formControlName="Name">
+                                
+                                <span class="help-block" *ngIf="projectForm.get('Name').errors && 
+                                (projectForm.get('Name').touched || projectForm.get('Name').dirty)" >
+                                <span *ngIf="projectForm.get('Name').errors.required">Name is required </span>
+                            </span>
+                                <div *ngIf="submitted && projectForm.controls.Name.errors" class="error">
+                                    <div *ngIf="projectForm.get('Name').errors.required">Name is required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="middleName">Description:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control form-control-xs" formControlName="Description">
+                                <div *ngIf="submitted && projectForm.controls.Description.errors" class="error">
+                                    <div *ngIf="projectForm.controls.Description.errors.required">Description is
+                                        required</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </form>
-         </div>  
-    </div>  
-    
-    <div>        
-        <!-- [columnDefs] -- property binding 
-        <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-blue" 
-        (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" (selectionChanged)="onSelectionChanged($event)" 
-         
-[columnDefs]="columnDefs" [rowData]="projects" rowSelection="single" [pagination]="true" paginationPageSize=5
-></ag-grid-angular>  -->
-    </div> 
-</div>  
+        </div>
+    </div>
+
+    <div>
+        <!-- [columnDefs] -- property binding -->
+        <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-blue" (gridReady)="onGridReady($event)"
+            [gridOptions]="gridOptions" (selectionChanged)="onSelectionChanged($event)" [columnDefs]="columnDefs"
+            [rowData]="projects" rowSelection="single" [pagination]="true" paginationPageSize=5></ag-grid-angular>
+    </div>
+</div>

@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   tab = "";
-  opened = false;
+  opened = true;
   constructor() {
   }
   public toggleSidebar() {

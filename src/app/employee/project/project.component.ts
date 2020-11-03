@@ -21,7 +21,7 @@ export class ProjectComponent implements OnInit {
   massage = null;
   selectedRows: any;
   public projects: Project[];
-
+  public employees: Employee[];
 
   public columnDefs: ColDef[];   // row data and column definitions
   // gridApi and columnApi  
@@ -41,13 +41,26 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit() {
     this.projectForm = this.formBuilder.group({
+      "Code":["", Validators.required],
       "Name": ["", Validators.required],
       "Description": ["", Validators.required]
     });
 
     this.getProjectList();
+    this.getEmployeeList();
   }
-
+// get Employee List
+public getEmployeeList(){
+  this.employeeService.getEmployees().subscribe(data => { 
+    this.employees = data 
+    
+}) 
+}
+  // public changeEmployee(){
+  //   this.employees.setValue(e.target.value, {
+  //     onlySelf: true
+  //   })
+  // }
   // one grid initialisation, grap the APIs and auto resize the columns to fit the available space  
   onGridReady(params): void {
     this.gridApi = params.api;
@@ -70,12 +83,6 @@ export class ProjectComponent implements OnInit {
       filter: false,
       editable: false,
       sortable: false
-    },{
-      headerName: 'Person',
-      field: 'Code',
-      filter: false,
-      editable: false,
-      sortable: false
     }, {
       headerName: 'Name',
       field: 'Name',
@@ -94,6 +101,8 @@ export class ProjectComponent implements OnInit {
 
   
   onFormSubmit() {
+    console.log("form submited");
+    console.log(this.projectForm.value);
     this.dataSaved = false;
     const project = this.projectForm.value;
     this.CreateProject(project);
