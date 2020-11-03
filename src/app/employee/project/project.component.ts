@@ -36,9 +36,12 @@ export class ProjectComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder, private router: Router, private employeeService: EmployeeService, private toastr: ToastrService) {
     this.columnDefs = this.createColumnDefs();
-
+    this.gridOptions = {
+      columnDefs: this.createColumnDefs(),
+      masterDetail: true,
+    
+    }
   }
-
   ngOnInit() {
     this.projectForm = this.formBuilder.group({
       "Code":["", Validators.required],
@@ -49,6 +52,7 @@ export class ProjectComponent implements OnInit {
     this.getProjectList();
     this.getEmployeeList();
   }
+
 // get Employee List
 public getEmployeeList(){
   this.employeeService.getEmployees().subscribe(data => { 
@@ -56,11 +60,7 @@ public getEmployeeList(){
     
 }) 
 }
-  // public changeEmployee(){
-  //   this.employees.setValue(e.target.value, {
-  //     onlySelf: true
-  //   })
-  // }
+
   // one grid initialisation, grap the APIs and auto resize the columns to fit the available space  
   onGridReady(params): void {
     this.gridApi = params.api;
@@ -68,8 +68,7 @@ public getEmployeeList(){
     this.gridApi.sizeColumnsToFit();
   }
 
-  addContact(){
-    console.log(this.projectForm.Name);
+  public addContact(){
     this.projectList.push(
       {Name:this.projectForm.Name},
       {Description : this.projectForm.Description}
@@ -80,6 +79,12 @@ public getEmployeeList(){
     return [{
       headerName: 'ID',
       field: 'Id',
+      filter: false,
+      editable: false,
+      sortable: false
+    }, {
+      headerName: 'code',
+      field: 'Code',
       filter: false,
       editable: false,
       sortable: false
@@ -101,8 +106,6 @@ public getEmployeeList(){
 
   
   onFormSubmit() {
-    console.log("form submited");
-    console.log(this.projectForm.value);
     this.dataSaved = false;
     const project = this.projectForm.value;
     this.CreateProject(project);
@@ -149,6 +152,7 @@ public getEmployeeList(){
     this.massage = null;
     this.dataSaved = false;
     this.employeeIdUpdate = this.selectedRows[0].id;
+    this.projectForm.controls['Code'].setValue(this.selectedRows[0].Code);
     this.projectForm.controls['Name'].setValue(this.selectedRows[0].Name);
     this.projectForm.controls['Description'].setValue(this.selectedRows[0].Description);
   }
@@ -162,7 +166,7 @@ public getEmployeeList(){
       return;
     }
     this.employeeService.deleteProject(selectedRows[0].Code).subscribe(data => {
-      this.toastr.success("successfully deleted ", data);
+      this.toastr.success("successfully deleted ");
       this.ngOnInit();
     });
   }

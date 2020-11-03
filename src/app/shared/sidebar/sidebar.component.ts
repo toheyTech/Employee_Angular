@@ -16,6 +16,5 @@ export class SidebarComponent implements OnInit {
   
   public onNewProjectClick() {
     this.router.navigate(['/employee/project']);
-    console.log("Project Clicked");
   }
 }

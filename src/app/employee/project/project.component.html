@@ -7,6 +7,9 @@
                         type="submit" class="btn btn-sm btn-primary">Submit</button>
                     <button style="margin-right: 8px; " class="btn btn-sm btn-warning" (click)="resetForm()">
                         Clear</button>
+                    <!-- event binding  -->
+                    <!-- <button style="margin-right: 8px;" class="btn btn-sm btn-success button" (click)="add()">Add </button>     -->
+
                     <button form="ngProjectForm" style="margin-right: 8px;" [disabled]="!projectForm.valid"
                         class="btn btn-sm btn-primary" type="submit" (click)="onFormSubmit()">Edit </button>
 
@@ -43,16 +46,10 @@
                             <div class="col-md-4">
                                 <label for="name">Project Name:</label>
                             </div>
-                            <div  class="col-md-8 formGroup" [ngClass]="{ 'has-error': projectForm.get('Name').errors && 
-                            (projectForm.get('Name').touched || projectForm.get('Name').dirty) }">
-                                <input id="Name" type="text" class="form-control form-control-xs" formControlName="Name">
-                                
-                                <span class="help-block" *ngIf="projectForm.get('Name').errors && 
-                                (projectForm.get('Name').touched || projectForm.get('Name').dirty)" >
-                                <span *ngIf="projectForm.get('Name').errors.required">Name is required </span>
-                            </span>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control form-control-xs" formControlName="Name">
                                 <div *ngIf="submitted && projectForm.controls.Name.errors" class="error">
-                                    <div *ngIf="projectForm.get('Name').errors.required">Name is required</div>
+                                    <div *ngIf="projectForm.controls.Name.errors.required">Name is required</div>
                                 </div>
                             </div>
                         </div>
@@ -78,9 +75,9 @@
     </div>
 
     <div>
-        <!-- [columnDefs] -- property binding -->
-        <ag-grid-angular style="width: 100%; height: 200px;" class="ag-theme-blue" (gridReady)="onGridReady($event)"
+
+        <ag-grid-angular style="width: 100%; height: 320px;" class="ag-theme-blue" (gridReady)="onGridReady($event)"
             [gridOptions]="gridOptions" (selectionChanged)="onSelectionChanged($event)" [columnDefs]="columnDefs"
-            [rowData]="projects" rowSelection="single" [pagination]="true" paginationPageSize=5></ag-grid-angular>
+            [rowData]="projects" rowSelection="single" [pagination]="true" paginationPageSize=10></ag-grid-angular>
     </div>
 </div>

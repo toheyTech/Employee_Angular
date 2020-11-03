@@ -1,12 +1,12 @@
 
 import { Component, OnInit, ViewChild, Output } from '@angular/core';
-import { ColDef, GridApi, ColumnApi, GridOptions } from 'ag-grid-community'; 
-import { FormArray,Validators, FormBuilder, FormGroup } from '@angular/forms'; 
-import { BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
-import { ToastrService } from 'ngx-toastr'; 
-import {Router} from '@angular/router';
+import { ColDef, GridApi, ColumnApi, GridOptions } from 'ag-grid-community';
+import { FormArray, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
-import { EmployeeService  } from '../../services/employee.service'; 
+import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../model/employee';
 
 @Component({
@@ -15,8 +15,8 @@ import { Employee } from '../../model/employee';
   styleUrls: ['./personal-detail.component.scss', '../employee.component.scss']
 })
 export class PersonalDetailComponent implements OnInit {
- 
-  datePickerConfig: Partial <BsDatepickerConfig>;
+
+  datePickerConfig: Partial<BsDatepickerConfig>;
   employeeIdUpdate = null;
   dataSaved = false;
   massage = null;
@@ -25,186 +25,186 @@ export class PersonalDetailComponent implements OnInit {
 
   public columnDefs: ColDef[];   // row data and column definitions
   // gridApi and columnApi  
-  private gridApi: GridApi;  
+  private gridApi: GridApi;
   private columnApi: ColumnApi;
   public employeeId: any;
   gridOptions: GridOptions; //Declare gridoptions
-  
-  submitted: boolean= false;  
+
+  submitted: boolean = false;
   employeeForm: FormGroup; // form name
-  Title: any = ['ATO', 'WRO', 'W/T']; 
-  Gender: any = ['Male', 'Female'] ; 
-  Nationality: any = ['Ethiopia', 'Kenya', 'Sudan', 'South Sudan', 'Djibuti'] ;
-  
-  constructor( private formBuilder: FormBuilder, private router: Router, private employeeService: EmployeeService,private toastr:ToastrService ) {  
-      this.columnDefs = this.createColumnDefs(); 
-      this.datePickerConfig = Object.assign({},
-        {
-            containerClass:'theme-dark-blue'
-      }); 
-      
-      this.gridOptions = {
-        columnDefs :this.createColumnDefs(),
-        masterDetail: true,
-        detailCellRendererParams: {
+  Title: any = ['ATO', 'WRO', 'W/T'];
+  Gender: any = ['Male', 'Female'];
+  Nationality: any = ['Ethiopia', 'Kenya', 'Sudan', 'South Sudan', 'Djibuti'];
 
-          // provide the Grid Options to use on the Detail Grid
-          detailGridOptions: {
-              columnDefs: [
-                  { field: 'callId' },
-                  { field: 'direction' },
-                  { field: 'number'}
-              ]
-          },
-  
-          // get the rows for each Detail Grid
-          getDetailRowData: function(params) {
-              params.successCallback(params.data.callRecords);
-          }
+  constructor(private formBuilder: FormBuilder, private router: Router, private employeeService: EmployeeService, private toastr: ToastrService) {
+    this.columnDefs = this.createColumnDefs();
+    this.datePickerConfig = Object.assign({},
+      {
+        containerClass: 'theme-dark-blue'
+      });
+
+    this.gridOptions = {
+      columnDefs: this.createColumnDefs(),
+      masterDetail: true,
+      detailCellRendererParams: {
+
+        // provide the Grid Options to use on the Detail Grid
+        detailGridOptions: {
+          columnDefs: [
+            { field: 'callId' },
+            { field: 'direction' },
+            { field: 'number' }
+          ]
+        },
+
+        // get the rows for each Detail Grid
+        getDetailRowData: function (params) {
+          params.successCallback(params.data.callRecords);
+        }
       }
-       // onRowDoubleClicked(): this.onRowDoubleClicked(any)
-      
-    }
-  }  
+      // onRowDoubleClicked(): this.onRowDoubleClicked(any)
 
-  ngOnInit() {  
+    }
+  }
+
+  ngOnInit() {
 
     this.initializeEmployeeForm();
     this.getEmployeeList();
-  } 
+  }
 
-  public initializeEmployeeForm(){
+  public initializeEmployeeForm() {
     this.employeeForm = this.formBuilder.group({
-      "Title": ["", Validators.required],  
-      "FirstName": ["", Validators.required],  
-      "MiddleName": ["", Validators.required],  
-      "LastName": ["", Validators.required],  
-      "Nationality": ["", Validators.required],  
-      "BirthDate": ["", Validators.required],  
-      "Gender": ["", Validators.required],  
-      "Active": ["", Validators.requiredTrue],  
-      "Remark": ["", ],
-      "projects": this.formBuilder.array([this.newProject()]),  
+      "Title": ["", Validators.required],
+      "FirstName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      "MiddleName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      "LastName": ["", [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
+      "Nationality": ["", Validators.required],
+      "BirthDate": ["", Validators.required],
+      "Gender": ["", Validators.required],
+      "Active": ["", Validators.requiredTrue],
+      "Remark": ["",],
+      "projects": this.formBuilder.array([this.newProject()]),
     });
   }
 
   // create form array
-  public get projects(): FormArray{
+  public get projects(): FormArray {
     return this.employeeForm.get("projects") as FormArray;
   }
 
   // intialize employee Form
-  private newProject() : FormGroup{
+  private newProject(): FormGroup {
     return this.formBuilder.group({
       "Code": 0,
       "Name": '',
-      "Description" : '',
+      "Description": '',
     })
   }
 
   // add project Form
-  public addProjects(){
+  public addProjects() {
     this.projects.push(this.newProject());
   }
 
   // remove project Form
-  public removeProject(i : number){
-    if(this.projects.length >1){
+  public removeProject(i: number) {
+    if (this.projects.length > 1) {
       this.projects.removeAt(i);
     }
   }
 
   // one grid initialisation, grap the APIs and auto resize the columns to fit the available space  
-  public onGridReady(params): void {  
-      this.gridApi = params.api;  
-      this.columnApi = params.columnApi;  
-      this.gridApi.sizeColumnsToFit();
+  public onGridReady(params): void {
+    this.gridApi = params.api;
+    this.columnApi = params.columnApi;
+    this.gridApi.sizeColumnsToFit();
   }
-  
+
   // create column definitions  
-  private createColumnDefs() {  
+  private createColumnDefs() {
     return [{
-            headerName: 'Code',
-            field: 'Code',
-            filter: false,
-            editable: false,
-            sortable: false,
-            cellRenderer: 'agGroupCellRenderer'
-          }, {
-            headerName: 'Title',
-            field: 'Title',
-            filter: false,
-            editable: false,
-            sortable: false
-          }, {  
-            headerName: 'First Name',  
-            field: 'FirstName',  
-            filter: true,  
-            editable: false,  
-            sortable: true  
-            }, {  
-            headerName: 'Middle Name',  
-            field: 'MiddleName',  
-            filter: true,  
-            editable: false,  
-            sortable: true  
-            },{  
-            headerName: 'Last Name',  
-            field: 'LastName',  
-            filter: true,  
-            editable: false,  
-            sortable: true  
-            }, 
-            {  
-            headerName: 'Gender',  
-            field: 'Gender',  
-            filter: false,  
-            sortable: false,  
-            editable: false,  
-            }, {  
-            headerName: 'Nationality',  
-            field: 'Nationality',  
-            filter: true,  
-            editable: false,  
-            sortable: true  
-            }, {
-              headerName: 'Date of Birth',
-              field: 'BirthDate',
-              filter: true,
-              editable: false
-            }, {
-              headerName: 'Status',
-              field: 'Active',
-              filter: true,
-              editable: false,
-              cellRenderer: params => {
-                return `<input type='checkbox' ${params.value ? 'checked' : ''} />`;
-              }
-            }, {
-              headerName: 'Remark',
-              field: 'Remark',
-              filter: true,
-              editable: false
-            }, {
-              headerName: 'P Description',
-              field: 'Description',
-              filter: true,
-              editable: false
-            },
-            {
-              headerName: 'P Description',
-              field: 'data.Projects.Description',
-              filter: true,
-              editable: false
-            }]  
-        }  
+      headerName: 'Code',
+      field: 'Code',
+      filter: false,
+      editable: false,
+      sortable: false,
+      cellRenderer: 'agGroupCellRenderer'
+    }, {
+      headerName: 'Title',
+      field: 'Title',
+      filter: false,
+      editable: false,
+      sortable: false
+    }, {
+      headerName: 'First Name',
+      field: 'FirstName',
+      filter: true,
+      editable: false,
+      sortable: true
+    }, {
+      headerName: 'Middle Name',
+      field: 'MiddleName',
+      filter: true,
+      editable: false,
+      sortable: true
+    }, {
+      headerName: 'Last Name',
+      field: 'LastName',
+      filter: true,
+      editable: false,
+      sortable: true
+    },
+    {
+      headerName: 'Gender',
+      field: 'Gender',
+      filter: false,
+      sortable: false,
+      editable: false,
+    }, {
+      headerName: 'Nationality',
+      field: 'Nationality',
+      filter: true,
+      editable: false,
+      sortable: true
+    }, {
+      headerName: 'Date of Birth',
+      field: 'BirthDate',
+      filter: true,
+      editable: false
+    }, {
+      headerName: 'Status',
+      field: 'Active',
+      filter: true,
+      editable: false,
+      cellRenderer: params => {
+        return `<input type='checkbox' ${params.value ? 'checked' : ''} />`;
+      }
+    }, {
+      headerName: 'Remark',
+      field: 'Remark',
+      filter: true,
+      editable: false
+    }, {
+      headerName: 'P Description',
+      field: 'Description',
+      filter: true,
+      editable: false
+    },
+    {
+      headerName: 'P Description',
+      field: 'data.Projects.Description',
+      filter: true,
+      editable: false
+    }]
+  }
   status: any;
-  
+
   // Choose nationality using select dropdown
   public changeNationality(e) {
-  this.Nationality.setValue(e.target.value, {
-    onlySelf: true
-  })
+    this.Nationality.setValue(e.target.value, {
+      onlySelf: true
+    })
   }
 
   // Choose Gender using select dropdown
@@ -215,9 +215,9 @@ export class PersonalDetailComponent implements OnInit {
   }
   //
   public changeTitle(e) {
-  this.Title.setValue(e.target.value, {
-    onlySelf: true
-  })
+    this.Title.setValue(e.target.value, {
+      onlySelf: true
+    })
   }
 
   onFormSubmit() {
@@ -228,22 +228,22 @@ export class PersonalDetailComponent implements OnInit {
   }
 
   // get Employee By Code
-  public getEmployeeByID(){
-    this.employeeService.getEmployeeDetailById(this.employeeId).subscribe(data =>{
+  public getEmployeeByID() {
+    this.employeeService.getEmployeeDetailById(this.employeeId).subscribe(data => {
       console.log(data);
     })
   }
 
   // get Employee List
-  public getEmployeeList(){
-    this.employeeService.getEmployees().subscribe(data => { 
-      console.log(data); 
-      this.employees = data 
-      
-  }) 
+  public getEmployeeList() {
+    this.employeeService.getEmployeesWithProject().subscribe(data => {
+     // console.log(data);
+      this.employees = data
+
+    })
   }
 
-// save method which include creating new and updating existing
+  // save method which include creating new and updating existing
   CreateEmployee(employee: Employee) {
     console.log(this.employeeForm.value);
     if (this.employeeIdUpdate == null) {
@@ -251,7 +251,7 @@ export class PersonalDetailComponent implements OnInit {
         () => {
 
           this.dataSaved = true;
-          this.toastr.success("successfully created "); 
+          this.toastr.success("successfully created ");
           this.getEmployeeList();
           this.employeeIdUpdate = null;
           this.initializeEmployeeForm();
@@ -261,21 +261,21 @@ export class PersonalDetailComponent implements OnInit {
       employee.Code = this.employeeIdUpdate;
       this.employeeService.updateEmployee(employee.Code, employee).subscribe(() => {
         this.dataSaved = true;
-        this.toastr.success("successfully updated "); 
+        this.toastr.success("successfully updated ");
         this.getEmployeeList();
         this.employeeIdUpdate = null;
         this.employeeForm.reset();
       });
     }
-  } 
+  }
 
   // on row selecting change
   public onSelectionChanged(event) {
-     this.selectedRows = this.gridApi.getSelectedRows();
+    this.selectedRows = this.gridApi.getSelectedRows();
     //console.log(selectedRows[0].Code);
     this.massage = null;
     this.dataSaved = false;
-    this.employeeIdUpdate = this.selectedRows[0].Code; 
+    this.employeeIdUpdate = this.selectedRows[0].Code;
     this.employeeForm.controls['Title'].setValue(this.selectedRows[0].Title);
     this.employeeForm.controls['FirstName'].setValue(this.selectedRows[0].FirstName);
     this.employeeForm.controls['MiddleName'].setValue(this.selectedRows[0].MiddleName);
@@ -287,7 +287,7 @@ export class PersonalDetailComponent implements OnInit {
     this.employeeForm.controls['Remark'].setValue(this.selectedRows[0].Remark);
   }
 
-  public onRowClicked($event: any){
+  public onRowClicked($event: any) {
     console.log("yep");
   }
   // // on double click the row
@@ -297,29 +297,29 @@ export class PersonalDetailComponent implements OnInit {
   // }
 
   //Delete user  
-  public deleteEmployee() {  
-      debugger;  
-      var selectedRows = this.gridApi.getSelectedRows();  
-      if (selectedRows.length == 0) {  
-          this.toastr.error("error", "Please select a Employee for deletion");  
-          return;  
-      }  
-      this.employeeService.deleteEmployee(selectedRows[0].Code).subscribe(data => {    
-          this.toastr.success("successfully deleted ", data);  
-          this.ngOnInit();   
-      });  
-  }  
+  public deleteEmployee() {
+    debugger;
+    var selectedRows = this.gridApi.getSelectedRows();
+    if (selectedRows.length == 0) {
+      this.toastr.error("error", "Please select a Employee for deletion");
+      return;
+    }
+    this.employeeService.deleteEmployee(selectedRows[0].Code).subscribe(data => {
+      this.toastr.success("successfully deleted ", data);
+      this.ngOnInit();
+    });
+  }
 
   // reset form
   public resetForm() {
-    
+
     const selectedRows = this.gridApi.getSelectedRows();
-   // console.log();
+    // console.log();
     this.gridApi.deselectAll();
     this.initializeEmployeeForm();
-    this.employeeIdUpdate = null; 
-    this.massage = null;  
-    this.dataSaved = false;  
-  } 
+    this.employeeIdUpdate = null;
+    this.massage = null;
+    this.dataSaved = false;
+  }
 }
 

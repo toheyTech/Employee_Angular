@@ -130,8 +130,7 @@ export class PersonListComponent implements OnInit {
   status: any;
   // get Employee List
   public getEmployeeList() {
-    this.employeeService.getEmployees().subscribe(data => {
-      console.log(data);
+    this.employeeService.getEmployeesWithProject().subscribe(data => {
       this.employees = data
     })
   }

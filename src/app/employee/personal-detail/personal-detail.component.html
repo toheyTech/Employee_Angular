@@ -35,7 +35,8 @@
                                         (change)="changeTitle($event)">{{title}}
                                     </option>
                                 </select>
-                                <div *ngIf="submitted && employeeForm.controls.Title.errors" class="error">
+                                <div *ngIf="submitted && employeeForm.controls.Title.errors"
+                                    class="error">
                                     <div *ngIf="employeeForm.controls.Title.errors.required">Title is required</div>
                                 </div>
                             </div>
@@ -46,7 +47,8 @@
                             </div>
                             <div class="col-md-8">
                                 <input type="text" class="form-control form-control-xs" formControlName="FirstName">
-                                <div *ngIf="submitted && employeeForm.controls.FirstName.errors" class="error">
+                                <div *ngIf="employeeForm.controls.FirstName.errors && (employeeForm.controls.FirstName.touched || employeeForm.controls.FirstName.dirty)"
+                                    class="error">
                                     <div *ngIf="employeeForm.controls.FirstName.errors.required">First name is required
                                     </div>
                                 </div>
@@ -58,7 +60,8 @@
                             </div>
                             <div class="col-md-8">
                                 <input type="text" class="form-control form-control-xs" formControlName="MiddleName">
-                                <div *ngIf="submitted && employeeForm.controls.MiddleName.errors" class="error">
+                                <div *ngIf=" employeeForm.controls.MiddleName.errors && (employeeForm.controls.MiddleName.touched || employeeForm.controls.MiddleName.dirty)"
+                                    class="error">
                                     <div *ngIf="employeeForm.controls.MiddleName.errors.required">Middle name is
                                         required</div>
                                 </div>
@@ -70,7 +73,7 @@
                             </div>
                             <div class="col-md-8">
                                 <input type="text" class="form-control form-control-xs" formControlName="LastName">
-                                <div *ngIf="submitted && employeeForm.controls.LastName.errors" class="error">
+                                <div *ngIf="submitted && employeeForm.controls.LastName.errors && (employeeForm.controls.LastName.touched || employeeForm.controls.LastName.dirty)" class="error">
                                     <div *ngIf="employeeForm.controls.LastName.errors.required">Last name is required
                                     </div>
                                 </div>
@@ -132,7 +135,7 @@
                             </div>
                             <div class="col-md-2" style="margin-right: 5px;">
                                 <input type="checkbox" class="form-control form-control-xs" formControlName="Active">
-                                <div *ngIf="submitted && employeeForm.controls.Active.errors" class="error">
+                                <div *ngIf="employeeForm.controls.Active.errors && (employeeForm.controls.FirstName.touched || employeeForm.controls.FirstName.dirty)" class="error">
                                     <div *ngIf="employeeForm.controls.Active.errors.required">Status is required</div>
                                 </div>
                             </div>
@@ -156,9 +159,9 @@
                     <div class="card">
                         <div class="card-header card-header-xs" id="headingOne">
                             <h2 class="mb-0">
-                                <button class="btn " type="button" data-toggle="collapse"
-                                    data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Assign Project <i 
+                                <button class="btn " type="button" data-toggle="collapse" data-target="#collapseOne"
+                                    aria-expanded="true" aria-controls="collapseOne">
+                                    Assign Project <i
                                         class="mdi mdi-arrow-down-bold-circle-outline text-primary icon-sm"></i>
                                 </button>
                             </h2>
