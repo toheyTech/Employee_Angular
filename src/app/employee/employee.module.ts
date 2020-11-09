@@ -10,13 +10,14 @@ import { RouterModule } from '@angular/router';
 import { ProjectComponent } from './project/project.component';
 import { PersonalDetailComponent } from './personal-detail/personal-detail.component'; 
 import { EmployeeService } from '../services/employee.service';
-import { PersonListComponent } from './person-list/person-list.component'; 
+import { PersonListComponent } from './person-list/person-list.component';
+import { AddPersonComponent } from './add-person/add-person.component'; 
 
 
 
 @NgModule({
   declarations: [
-    ProjectComponent, PersonalDetailComponent, PersonListComponent,
+    ProjectComponent, PersonalDetailComponent, PersonListComponent, AddPersonComponent,
     //EmployeeComponent
   ],
   imports: [

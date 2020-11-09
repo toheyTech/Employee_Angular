@@ -1,6 +1,6 @@
 export class Project {
     
-    id : number ;
+    Id : number ;
     Name :string;
     Description : string;
     Code : number;

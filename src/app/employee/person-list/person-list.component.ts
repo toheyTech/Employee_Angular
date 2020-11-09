@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 
 import { EmployeeService } from '../../services/employee.service';
 import { Employee } from '../../model/employee';
-
+import { ButtonRendererComponent } from '../button-renderer.component';
 
 @Component({
   selector: 'app-person-list',
@@ -23,7 +23,7 @@ export class PersonListComponent implements OnInit {
   selectedRows: any;
   public employees: Employee[];
 
-
+  public frameworkComponents: any;
   public columnDefs: ColDef[];   // row data and column definitions
   // gridApi and columnApi  
   private gridApi: GridApi;
@@ -47,6 +47,9 @@ export class PersonListComponent implements OnInit {
     this.gridOptions = {
       // onRowDoubleClicked(): this.onRowDoubleClicked(any)
 
+    }
+    this.frameworkComponents = {
+      buttonRenderer: ButtonRendererComponent,
     }
   }
 
@@ -125,7 +128,17 @@ export class PersonListComponent implements OnInit {
       field: 'Remark',
       filter: true,
       editable: false
-    }]
+    },
+      ,
+    {
+      headerName: 'Button Col 1',
+      cellRenderer: 'buttonRenderer',
+      cellRendererParams: {
+        onClick: this.onBtnClick1.bind(this),
+        label: 'Edit'
+      }
+    }
+    ]
   }
   status: any;
   // get Employee List
@@ -134,7 +147,10 @@ export class PersonListComponent implements OnInit {
       this.employees = data
     })
   }
-
+  onBtnClick1(e) {
+    // this.rowDataClicked1 = e.rowData;
+    this.deleteEmployee();
+  }
 
   // on row selecting change
   public onSelectionChanged(event) {
@@ -143,8 +159,20 @@ export class PersonListComponent implements OnInit {
     this.massage = null;
     this.dataSaved = false;
     this.employeeIdUpdate = this.selectedRows[0].Code;
-    
+   // console.log(this.employeeIdUpdate);
   }
+
+  public onNewPersonClick() {
+    this.router.navigate(['/employee/new-person']);
+  }
+
+  public rowDoubleClicked($event: any) {
+    this.selectedRows = this.gridApi.getSelectedRows();
+    this.employeeIdUpdate = this.selectedRows[0].Code;
+    console.log(this.employeeIdUpdate);
+    this.router.navigate(['/employee/person/' + this.employeeIdUpdate]);
+  }
+
   public onRowClicked($event: any) {
     console.log("yep");
   }

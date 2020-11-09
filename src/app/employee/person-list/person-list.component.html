@@ -1,12 +1,31 @@
-<div class="container">  
-    
-    <div>        
-        <!-- [columnDefs] -- property binding  -->
-        <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-blue" 
-        (gridReady)="onGridReady($event)" [gridOptions]="gridOptions" (selectionChanged)="onSelectionChanged($event)" 
-         (rowClicked) = "onRowClicked($event)"
-[columnDefs]="columnDefs" [rowData]="employees" rowSelection="single" [pagination]="true" paginationPageSize=15
-></ag-grid-angular> 
-    </div> 
-</div>  
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <!-- buttons -->
+            <div style="margin-top: -20px;" class="row">
+                <div class="col-md-4" style="text-align: left;">
+                    <button form="ngEmployeeForm" style="margin-right: 8px;" (click)="onNewPersonClick()"
+                        class="btn btn-sm btn-primary">New</button>
+                    <button style="margin-right: 8px; " class="btn btn-sm btn-warning" >
+                        Clear</button>
+                    <!-- <button form="ngEmployeeForm" style="margin-right: 8px;" [disabled]="!employeeForm.valid"
+                        class="btn btn-sm btn-primary" type="submit" (click)="onFormSubmit()">Edit </button>
 
+                    <button class="btn btn-sm btn-danger" (click)="deleteEmployee()">Delete </button> -->
+                </div>
+                <div class="col-md-8"></div>
+            </div>
+
+            <hr style="margin-top: 0px;">
+            
+
+        </div>
+    </div>
+    <div>
+        <!-- [columnDefs] -- property binding  -->
+        <ag-grid-angular style="width: 100%; height: 450px;" class="ag-theme-blue" (gridReady)="onGridReady($event)"
+            [gridOptions]="gridOptions" (rowDoubleClicked)="rowDoubleClicked($event)"
+             [frameworkComponents]="frameworkComponents" [columnDefs]="columnDefs"
+            [rowData]="employees" rowSelection="single" [pagination]="true" paginationPageSize=15></ag-grid-angular>
+    </div>
+</div>

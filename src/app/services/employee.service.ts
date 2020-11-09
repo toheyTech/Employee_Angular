@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+import { environment } from '../../environments/environment';
 import { Employee } from '../model/employee';
 import { Project } from '../model/project';
 
@@ -9,29 +10,28 @@ import { Project } from '../model/project';
 
 export class EmployeeService {
 
-    apiUrl: string = "http://localhost:58733/api/People/";
-    projectUrl: string = "http://localhost:58733/api/Projects/";
+    private personUrl = environment.rootUrl + 'People/'; // person url
+    private projectUrl = environment.rootUrl + 'Projects/'; // project url
 
     constructor(private http: HttpClient) { }
 
-
     public getEmployeeDetailById(Code: string): Observable<Employee> {
-        return this.http.get<Employee>(`${this.apiUrl}GetPeopleDetailById/` + Code);
+        return this.http.get<Employee>(this.personUrl + `GetPeopleDetailById/` + Code);
     }
-
+                                                                                                                                      b                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
     // get list of employees service
     public getEmployees(): Observable<Employee[]> {
-        return this.http.get<Employee[]>(`${this.apiUrl}GetPeopleDetails`);
+        return this.http.get<Employee[]>(this.personUrl + `GetPeopleDetails`);
     }
 
     // get list of employees service with Project
     public getEmployeesWithProject(): Observable<Employee[]> {
-        return this.http.get<Employee[]>(`${this.apiUrl}GetPeopleDetailWithProjects`);
+        return this.http.get<Employee[]>(  this.personUrl + `GetPeopleDetailWithProjects`);
     }
 
     // get list of projects service
     public getprojects(): Observable<Project[]> {
-        return this.http.get<Project[]>(`${this.projectUrl}GetProjectDetails`);
+        return this.http.get<Project[]>(this.projectUrl + `GetProjectDetails`);
     }
 
 
@@ -43,7 +43,7 @@ export class EmployeeService {
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.post<string>(`${this.apiUrl}InsertPeopleDetails/`, employee, httpOptions);
+        return this.http.post<string>( this.personUrl + `InsertPeopleDetails/`, employee, httpOptions);
     }
 
     // create project service
@@ -54,7 +54,7 @@ export class EmployeeService {
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.post<string>(`${this.projectUrl}InsertProjectDetails/`, project, httpOptions);
+        return this.http.post<string>( this.projectUrl + `InsertProjectDetails/`, project, httpOptions);
     }
 
     // update employee
@@ -64,7 +64,7 @@ export class EmployeeService {
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.put<string>(`${this.apiUrl}UpdatePeopleDetails/` + Code, employee, httpOptions);
+        return this.http.put<string>( this.personUrl + `UpdatePeopleDetails/` + Code, employee, httpOptions);
     }
 
     // update project
@@ -74,7 +74,7 @@ export class EmployeeService {
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.put<string>(`${this.apiUrl}UpdateProjectDetails/` + id, project, httpOptions);
+        return this.http.put<string>(this.projectUrl + `UpdateProjectDetails/` + id, project, httpOptions);
     }
 
     // delete employee
@@ -84,7 +84,7 @@ export class EmployeeService {
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.delete<string>(`${this.apiUrl}DeletePeopleDetails/` + Code, httpOptions);
+        return this.http.delete<string>(this.personUrl + `DeletePeopleDetails/` + Code, httpOptions);
     }
 
     // delete Project
@@ -94,6 +94,6 @@ export class EmployeeService {
                 'Content-Type': 'application/json'
             })
         };
-        return this.http.delete<string>(`${this.apiUrl}DeleteProjectDetails/` + id, httpOptions);
+        return this.http.delete<string>( this.projectUrl + `DeleteProjectDetails/` + id, httpOptions);
     }
 }  

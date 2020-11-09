@@ -37,8 +37,6 @@ import { SidebarComponent } from './shared/sidebar/sidebar.component';
     SidebarModule.forRoot(),
     ReactiveFormsModule ,
     AgGridModule.withComponents([]),
-   // BsDatepickerModule.forRoot(),
-    //DatepickerModule.forRoot() ,
     EmployeeModule
   ],
   providers: [ 

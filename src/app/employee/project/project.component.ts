@@ -116,7 +116,6 @@ public getEmployeeList(){
   // get Employee List
   public getProjectList() {
     this.employeeService.getprojects().subscribe(data => {
-      console.log(data);
       this.projects = data
     })
   }
@@ -134,8 +133,8 @@ public getEmployeeList(){
         }
       );
     } else {
-      project.id = this.employeeIdUpdate;
-      this.employeeService.updateProject(project.id, project).subscribe(() => {
+      project.Id = this.employeeIdUpdate;
+      this.employeeService.updateProject(project.Id, project).subscribe(() => {
         this.dataSaved = true;
         this.toastr.success("successfully updated ");
         this.getProjectList();
@@ -159,13 +158,13 @@ public getEmployeeList(){
 
   //Delete user  
   public deleteProject() {
-    debugger;
+   // debugger;
     var selectedRows = this.gridApi.getSelectedRows();
     if (selectedRows.length == 0) {
       this.toastr.error("error", "Please select a Project for deletion");
       return;
     }
-    this.employeeService.deleteProject(selectedRows[0].Code).subscribe(data => {
+    this.employeeService.deleteProject(selectedRows[0].Id).subscribe(data => {
       this.toastr.success("successfully deleted ");
       this.ngOnInit();
     });
