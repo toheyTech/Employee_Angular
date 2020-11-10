@@ -1,20 +1,42 @@
+// import { NgModule } from '@angular/core';
+// import { Routes, RouterModule } from '@angular/router';
+// import { DashboardComponent} from './shared/dashboard/dashboard.component';
+
+// // parent routing [ Main Routing]
+// const routes: Routes = [
+//   {path: "dashboard", component: DashboardComponent},
+//   { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
+//   //{path: '**', component: PageNotFoundCompnent}
+//  ];
+
+// @NgModule({
+//   imports: [RouterModule.forRoot(routes)],
+//   exports: [RouterModule],
+
+// })
+// export class AppRoutingModule { 
+
+// }
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { DashboardComponent} from './shared/dashboard/dashboard.component';
 
-// parent routing [ Main Routing]
+import { HomeComponent } from './home.component';
+import { AuthGuard } from './_helpers/auth.guard';
+
+const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
+const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
+
 const routes: Routes = [
-  {path: "dashboard", component: DashboardComponent},
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full'},
-  //{path: '**', component: PageNotFoundCompnent}
- ];
+    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard] },
+    { path: 'account', loadChildren: accountModule },
+
+    // otherwise redirect to home
+    { path: '**', redirectTo: '' }
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
-
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule]
 })
-export class AppRoutingModule { 
-
-
-}
+export class AppRoutingModule { }

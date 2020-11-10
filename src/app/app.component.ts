@@ -1,4 +1,8 @@
-import { Component } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
+import { AccountService } from './services/account.service';
+import { User } from './model/user';
+
 
 @Component({
   selector: 'app-root',
@@ -8,9 +12,15 @@ import { Component } from '@angular/core';
 export class AppComponent {
   tab = "";
   opened = true;
-  constructor() {
+  user: User;
+
+  constructor(private accountService: AccountService) {
+    this.accountService.user.subscribe(x => this.user = x);
   }
   public toggleSidebar() {
     this.opened = !this.opened;
+  }
+  logout() {
+    this.accountService.logout();
   }
 }

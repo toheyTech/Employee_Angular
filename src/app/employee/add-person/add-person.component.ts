@@ -1,6 +1,5 @@
 
-import { Component, OnInit, ViewChild, Output } from '@angular/core';
-import { ColDef, GridApi, ColumnApi, GridOptions } from 'ag-grid-community';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ToastrService } from 'ngx-toastr';
@@ -18,18 +17,15 @@ import { Project } from '../../model/project';
 export class AddPersonComponent implements OnInit {
 
   datePickerConfig: Partial<BsDatepickerConfig>;
-  public projectData: Project[];
-  public employees: Employee[];
-  public employeeId: any;
+  employeeForm: FormGroup; // form name
 
   employeeIdUpdate = null;
-  submitted: boolean = false;
-  dataSaved = false;
   massage = null;
-  selectedRows: any;
-  private gridApi: GridApi;
+  submitted: boolean = false;
+  dataSaved: boolean = false;
 
-  employeeForm: FormGroup; // form name
+  public projectData: Project[];
+  public employees: Employee[];
   Title: any = ['ATO', 'WRO', 'W/T'];
   Gender: any = ['Male', 'Female'];
   Nationality: any = ['Ethiopia', 'Kenya', 'Sudan', 'South Sudan', 'Djibuti'];
@@ -45,7 +41,6 @@ export class AddPersonComponent implements OnInit {
   ngOnInit() {
 
     this.initializeEmployeeForm();
-    this.getEmployeeList();
   }
   
 // initialize employee form on Component initilization
@@ -105,87 +100,6 @@ export class AddPersonComponent implements OnInit {
     return formArray;
   }
 
-  // one grid initialisation, grap the APIs and auto resize the columns to fit the available space  
-  public onGridReady(params): void {
-    this.gridApi = params.api;
-    //this.columnApi = params.columnApi;
-    this.gridApi.sizeColumnsToFit();
-  }
-
-  // create column definitions  
-  private createColumnDefs() {
-    return [
-      //   {
-      //   headerName: 'Code',
-      //   field: 'Code',
-      //   filter: false,
-      //   editable: false,
-      //   sortable: false,
-      //   cellRenderer: 'agGroupCellRenderer'
-      // },
-      {
-        headerName: 'Title',
-        field: 'Title',
-        filter: false,
-        editable: false,
-        sortable: false
-      }, {
-        headerName: 'First Name',
-        field: 'FirstName',
-        filter: true,
-        editable: false,
-        sortable: true
-      }, {
-        headerName: 'Middle Name',
-        field: 'MiddleName',
-        filter: true,
-        editable: false,
-        sortable: true
-      }, {
-        headerName: 'Last Name',
-        field: 'LastName',
-        filter: true,
-        editable: false,
-        sortable: true
-      },
-      {
-        headerName: 'Gender',
-        field: 'Gender',
-        filter: false,
-        sortable: false,
-        editable: false,
-      }, {
-        headerName: 'Nationality',
-        field: 'Nationality',
-        filter: true,
-        editable: false,
-        sortable: true
-      }, {
-        headerName: 'Date of Birth',
-        field: 'BirthDate',
-        filter: true,
-        editable: false
-      }, {
-        headerName: 'Status',
-        field: 'Active',
-        filter: true,
-        editable: false,
-        cellRenderer: params => {
-          return `<input type='checkbox' ${params.value ? 'checked' : ''} />`;
-        }
-      }, {
-        headerName: 'Remark',
-        field: 'Remark',
-        filter: true,
-        editable: false
-      }
-    ]
-  }
-  status: any;
-  onBtnClick1(e) {
-    // this.rowDataClicked1 = e.rowData;
-    this.deleteEmployee();
-  }
   // Choose nationality using select dropdown
   public changeNationality(e) {
     this.Nationality.setValue(e.target.value, {
@@ -213,34 +127,15 @@ export class AddPersonComponent implements OnInit {
     this.employeeForm.reset();
   }
 
-  // get Employee By Code
-  public getEmployeeByID() {
-    this.employeeService.getEmployeeDetailById(this.employeeId).subscribe(data => {
-      console.log(data);
-    })
-  }
-
-  // get Employee List
-  public getEmployeeList() {
-    this.employeeService.getEmployeesWithProject().subscribe(data => {
-      console.log(data);
-      this.employees = data
-
-    })
-  }
-
   // save method which include creating new and updating existing
   public CreateEmployee(employee: Employee) {
     console.log(this.employeeForm.value);
     if (this.employeeIdUpdate == null) {
       this.employeeService.addEmployee(employee).subscribe(
         () => {
-
           this.dataSaved = true;
           this.toastr.success("successfully created ");
-          // this.getEmployeeList();
-          // this.employeeIdUpdate = null;
-          // this.initializeEmployeeForm();
+          this.resetForm();
           this.router.navigate(['/employee/person-list']);
 
         }
@@ -251,69 +146,15 @@ export class AddPersonComponent implements OnInit {
       this.employeeService.updateEmployee(employee.Code, employee).subscribe(() => {
         this.dataSaved = true;
         this.toastr.success("successfully updated ");
-        // this.getEmployeeList();
-        // this.employeeIdUpdate = null;
-        // this.employeeForm.reset();
+        this.resetForm();
         this.router.navigate(['/employee/person-list']);
       });
     }
   }
 
-  // on row selecting change
-  public onSelectionChanged(event) {
-    this.selectedRows = this.gridApi.getSelectedRows();
-    //console.log(selectedRows[0].Code);
-    this.massage = null;
-    this.dataSaved = false;
-    this.employeeIdUpdate = this.selectedRows[0].Code;
-    this.employeeForm.controls['Title'].setValue(this.selectedRows[0].Title);
-    this.employeeForm.controls['FirstName'].setValue(this.selectedRows[0].FirstName);
-    this.employeeForm.controls['MiddleName'].setValue(this.selectedRows[0].MiddleName);
-    this.employeeForm.controls['LastName'].setValue(this.selectedRows[0].LastName);
-    this.employeeForm.controls['Gender'].setValue(this.selectedRows[0].Gender);
-    this.employeeForm.controls['Nationality'].setValue(this.selectedRows[0].Nationality);
-    this.employeeForm.controls['BirthDate'].setValue(new Date(this.selectedRows[0].BirthDate)); //this.selectedRows[0].BirthDate
-    this.employeeForm.controls['Active'].setValue(this.selectedRows[0].Active);
-    this.employeeForm.controls['Remark'].setValue(this.selectedRows[0].Remark);
-    this.projectData = this.selectedRows[0].Projects;
-    this.employeeForm.setControl('projects', this.setExistingProject(this.projectData));
-
-  }
-
-  
-
-  public onRowClicked($event: any) {
-    console.log("yep");
-    //this.router.navigate(['/employee/project']);
-  }
-  // on double click the row
-  // public onRowDoubleClicked(event){
-  //   console.log("yep");
-  //   this.router.navigate(['./SomewhereElse']);
-  // }
-
-  //Delete user  
-  public deleteEmployee() {
-    debugger;
-    var selectedRows = this.gridApi.getSelectedRows();
-    if (selectedRows.length == 0) {
-      this.toastr.error("error", "Please select a Employee for deletion");
-      return;
-    }
-    this.employeeService.deleteEmployee(selectedRows[0].Code).subscribe(data => {
-      this.toastr.success("successfully deleted ", data);
-      this.ngOnInit();
-    });
-  }
-
   // reset form
   public resetForm() {
-
-    //this.gridApi.deselectAll();
     this.initializeEmployeeForm();
-    this.employeeIdUpdate = null;
-    this.massage = null;
-    this.dataSaved = false;
   }
 }
 

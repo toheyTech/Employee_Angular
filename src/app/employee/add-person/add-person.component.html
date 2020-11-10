@@ -28,10 +28,6 @@
                                         (change)="changeTitle($event)">{{title}}
                                     </option>
                                 </select>
-                                <!-- <div *ngIf=" employeeForm.controls.Title.errors"
-                                    class="error">
-                                    <div *ngIf="employeeForm.controls.Title.errors.required">Title is required</div>
-                                </div> -->
                             </div>
                         </div>
                         <div class="row">
@@ -42,7 +38,7 @@
                                 <input type="text" class="form-control form-control-xs" formControlName="FirstName">
                                 <div *ngIf="employeeForm.controls.FirstName.errors && (employeeForm.controls.FirstName.touched || employeeForm.controls.FirstName.dirty)"
                                     class="error">
-                                    <div *ngIf="employeeForm.controls.FirstName.errors.required">First name is required
+                                    <div *ngIf="employeeForm.controls.FirstName.errors.required" >First name is required
                                     </div>
                                 </div>
                             </div>
@@ -85,9 +81,9 @@
                                         (change)="changeGender($event)">{{gender}}
                                     </option>
                                 </select>
-                                <!-- <div *ngIf="submitted && employeeForm.controls.Gender.errors" class="error">
+                                <div *ngIf="submitted && employeeForm.controls.Gender.errors" class="error">
                                     <div *ngIf="employeeForm.controls.Gender.errors.required">Gender is required</div>
-                                </div> -->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -161,64 +157,62 @@
                                 </button>
                             </h2>
                         </div>
-                            <div id="collapseOne"  class="collapse show" aria-labelledby="headingOne"
-                                data-parent="#projectAccordion">
-                                <div class="card-body">
-                                    <div formArrayName="projects">
-                                        <div *ngFor="let project of projects.controls; let i=index">
-                                            <div [formGroupName]="i">
-                                                <div class="row">
-                                                    <div class="col-md-5">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="name">Name:</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" class="form-control form-control-xs"
-                                                                    formControlName="Name">
-                                                                <div *ngIf="submitted && employeeForm.controls.Name.errors"
-                                                                    class="error">
-                                                                    <div
-                                                                        *ngIf="employeeForm.controls.Name.errors.required">
-                                                                        Name is required</div>
-                                                                </div>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                            data-parent="#projectAccordion">
+                            <div class="card-body">
+                                <div formArrayName="projects">
+                                    <div *ngFor="let project of projects.controls; let i=index">
+                                        <div [formGroupName]="i">
+                                            <div class="row">
+                                                <div class="col-md-5">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="name">Name:</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control form-control-xs"
+                                                                formControlName="Name">
+                                                            <div *ngIf="submitted && employeeForm.controls.Name.errors"
+                                                                class="error">
+                                                                <div *ngIf="employeeForm.controls.Name.errors.required">
+                                                                    Name is required</div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <div class="row">
-                                                            <div class="col-md-4">
-                                                                <label for="description">Description:</label>
-                                                            </div>
-                                                            <div class="col-md-8">
-                                                                <input type="text" class="form-control form-control-xs"
-                                                                    formControlName="Description">
-                                                                <div *ngIf="submitted && employeeForm.controls.Description.errors"
-                                                                    class="error">
-                                                                    <div
-                                                                        *ngIf="employeeForm.controls.Description.errors.required">
-                                                                        Description is required</div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <button class="btn btn-sm " type="button"
-                                                            (click)="removeProject(i)"><i
-                                                                class="mdi mdi-minus-circle-outline text-danger icon-lg"></i></button>
-                                                    </div>
-                                                    <div class="col-md-1">
-                                                        <button class="btn btn-sm" type="button"
-                                                            (click)="addProjects()"><i
-                                                                class="mdi mdi-plus-circle-outline text-primary icon-lg"></i></button>
                                                     </div>
                                                 </div>
-
+                                                <div class="col-md-5">
+                                                    <div class="row">
+                                                        <div class="col-md-4">
+                                                            <label for="description">Description:</label>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <input type="text" class="form-control form-control-xs"
+                                                                formControlName="Description">
+                                                            <div *ngIf="submitted && employeeForm.controls.Description.errors"
+                                                                class="error">
+                                                                <div
+                                                                    *ngIf="employeeForm.controls.Description.errors.required">
+                                                                    Description is required</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-sm " type="button"
+                                                        (click)="removeProject(i)"><i
+                                                            class="mdi mdi-minus-circle-outline text-danger icon-lg"></i></button>
+                                                </div>
+                                                <div class="col-md-1">
+                                                    <button class="btn btn-sm" type="button" (click)="addProjects()"><i
+                                                            class="mdi mdi-plus-circle-outline text-primary icon-lg"></i></button>
+                                                </div>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
                     </div>
                 </div>
                 <hr style="margin-top: 0px;">
